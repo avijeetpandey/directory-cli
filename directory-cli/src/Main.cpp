@@ -106,14 +106,34 @@ void remove() {
 	std::cout << "removed" << endl;
 }
 
-void search(std::string name) {
+void search() {
+	std::string name;
+	std::cout << "Enter name to be searched : ";
+	std::cin >> name;
 	//finding specific documents
+	mongocxx::cursor cursor = coll.find(
+		document{} << "name" << open_document
+		<< "$eq" <<name
+		<<close_document<<finalize
+	);
+
+	    std::cout<< "==============================================" << endl;
+	for (auto doc : cursor) {
+		std::string extracted_name = doc["name"].get_utf8().value.to_string();
+		std::string extracted_phone = doc["phone"].get_utf8().value.to_string();
+		std::cout << "Name : " << extracted_name << "  " << extracted_phone << endl;
+		std::cout<< "=============================================="<<endl;
+	}
 
 }
 
 void showAllContacts() {
 	//display only names and contact numbers
-	std::cout << "printed" << endl;
+	mongocxx::cursor cursor = coll.find({});
+	for (auto doc : cursor)
+	{
+		std::cout << bsoncxx::to_json(doc) << endl;
+	}
 }
 
 void menu() {
