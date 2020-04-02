@@ -96,14 +96,15 @@ void insert() {
 }
 
 
-//function to update the contacts into database
-void update() {
-	std::cout << "updated" << endl;
-}
 
 //function to delete a coontact from the database
 void remove() {
-	std::cout << "removed" << endl;
+	std::string name;
+	std::cout << "Name ? : ";
+	std::cin >> name;
+
+	coll.delete_one(document{} << "name" << name << finalize);
+	std::cout << "Entry deleted succesfully" << endl;
 }
 
 void search() {
@@ -141,9 +142,8 @@ void menu() {
 	std::cout << "==================================================";
 	std::cout << endl << "Please choose from the below options" << endl;
 	std::cout << "=======================================================";
-	std::cout << endl << "1.New contact \t\t2.Update contact" << endl;
+	std::cout << endl << "1.New contact \t\t2.Show all contacts" << endl;
 	std::cout << "3.Delete Contact \t4.Search contact" << endl;
-	std::cout << "5.Show all contacts" << endl;
 	std::cin >> options;
 
 	//calling functions as per options
@@ -152,16 +152,13 @@ void menu() {
 		insert();
 		break;
 	case 2:
-		update();
+		showAllContacts();
 		break;
 	case 3:
 		remove();
 		break;
 	case 4:
 		search();
-		break;
-	case 5:
-		showAllContacts();
 		break;
 	default:
 		std::cout << "Oops , Invalid option try again" << endl;
@@ -192,9 +189,6 @@ int main() {
 			more = false;
 		}
 	}
-
-
-
 
 	return 0;
 }
