@@ -36,7 +36,6 @@ auto coll = connection[db_name][collection_name];  //connection established
 struct contact {
 	std::string name;
 	std::string phone;
-	std::string created;
 	std::string email;
 
 	//structure to store address
@@ -49,10 +48,10 @@ struct contact {
 
 //function to get time stamp
 
-std::string getTimeStamp() {
+char* getTimeStamp() {
 	auto e = std::chrono::system_clock::now();
 	time_t time = std::chrono::system_clock::to_time_t(e);
-	std::string timestamp = ctime(&time);
+	char* timestamp = ctime(&time);
 
 	return timestamp;
 }
@@ -77,9 +76,7 @@ void getDetails(contact &c) {
 void insert() {
 	contact c;
 	getDetails(c);
-
-	std::string timestamp = getTimeStamp();
-
+	char* timestamp = getTimeStamp();
 	//creating document to insert;
 	auto builder =bsoncxx::builder::stream::document{};
 
@@ -109,11 +106,13 @@ void remove() {
 	std::cout << "removed" << endl;
 }
 
-void search() {
-	std::cout << "found" << endl;
+void search(std::string name) {
+	//finding specific documents
+
 }
 
 void showAllContacts() {
+	//display only names and contact numbers
 	std::cout << "printed" << endl;
 }
 
