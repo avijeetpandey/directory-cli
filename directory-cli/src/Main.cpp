@@ -1,5 +1,10 @@
 #include<iostream>
+#include<chrono>
+#include<ctime>
+#include<typeinfo>
+#pragma warning(disable : 4996)
 #define endl '\n'
+
 //database related imports
 #include<bsoncxx/json.hpp>
 #include<bsoncxx/oid.hpp>
@@ -8,6 +13,7 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/instance.hpp>
+
 
 using bsoncxx::builder::stream::close_document;
 using bsoncxx::builder::stream::close_array;
@@ -25,6 +31,24 @@ mongocxx::client connection(mongocxx::uri{});
 
 //default database and collection name to access
 auto coll = connection[db_name][collection_name];  //connection established
+
+
+//structure to store details
+struct contact {
+	int _id;
+	std::string name;
+	std::string phone;
+	std::string created;
+	std::string email;
+
+	//structure to store address
+	struct address {
+		std::string city;
+		std::string district;
+		int zip;
+		std::string street;
+	};
+}c;
 
 //function to insert contacts into database
 void insert() {
@@ -105,5 +129,9 @@ int main() {
 			more = false;
 		}
 	}
+
+
+
+
 	return 0;
 }
