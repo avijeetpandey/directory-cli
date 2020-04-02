@@ -1,7 +1,6 @@
 #include<iostream>
 #include<chrono>
 #include<ctime>
-#include<typeinfo>
 #pragma warning(disable : 4996)
 #define endl '\n'
 
@@ -35,7 +34,6 @@ auto coll = connection[db_name][collection_name];  //connection established
 
 //structure to store details
 struct contact {
-	int _id;
 	std::string name;
 	std::string phone;
 	std::string created;
@@ -46,14 +44,60 @@ struct contact {
 		std::string city;
 		std::string district;
 		int zip;
-		std::string street;
-	};
-}c;
+	}address;
+};
+
+//function to get time stamp
+
+std::string getTimeStamp() {
+	auto e = std::chrono::system_clock::now();
+	time_t time = std::chrono::system_clock::to_time_t(e);
+	std::string timestamp = ctime(&time);
+
+	return timestamp;
+}
+
+void getDetails(contact &c) {
+	std::cout << "Name : ";
+	std::cin >> c.name;
+	std::cout << "Phone : ";
+	std::cin >> c.phone;
+	std::cout << "E-mail : ";
+	std::cin >> c.email;
+	std::cout << endl << "==============Address Details==========" << endl;
+	std::cout << "City : ";
+	std::cin >> c.address.city;
+	std::cout << "District : ";
+	std::cin >> c.address.district;
+	std::cout << "Zip : ";
+	std::cin >> c.address.zip;
+}
 
 //function to insert contacts into database
 void insert() {
-	std::cout << "Inserted" << endl;
+	contact c;
+	getDetails(c);
+
+	std::string timestamp = getTimeStamp();
+
+	//creating document to insert;
+	auto builder =bsoncxx::builder::stream::document{};
+
+	bsoncxx::document::value doc=builder
+		<< "name" << c.name
+		<< "phone" << c.phone
+		<< "created" << timestamp
+		<< "email" << c.email
+		<< "address" << open_document
+		<< "city" << c.address.city
+		<< "district" << c.address.district
+		<< "zip" << c.address.zip << close_document << finalize;
+
+	coll.insert_one(doc.view());
+	std::cout << "Record added succesfully" << endl;
+
 }
+
 
 //function to update the contacts into database
 void update() {
